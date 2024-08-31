@@ -48,29 +48,19 @@ const ListingCard = ({
   const isLiked = wishList?.find((item) => item?._id === listingId);
 
   const patchWishList = async () => {
-    try {
-      // Prevent adding your own listing to your wishlist
-      if (user?._id !== creator._id) {
-        const response = await fetch(
-          `http://localhost:3001/users/${user?._id}/${listingId}`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to update wishlist");
-        }
-
-        const data = await response.json();
-        dispatch(setWishList(data.wishList));
+    if (user?._id !== creator._id) {
+    const response = await fetch(
+      `http://localhost:3001/users/${user?._id}/${listingId}`,
+      {
+        method: "PATCH",
+        header: {
+          "Content-Type": "application/json",
+        },
       }
-    } catch (error) {
-      console.error("Error updating wishlist:", error);
-    }
+    );
+    const data = await response.json();
+    dispatch(setWishList(data.wishList));
+  } else { return }
   };
 
   return (
@@ -95,7 +85,7 @@ const ListingCard = ({
                 className="prev-button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  goToPrevSlide();
+                  goToPrevSlide(e);
                 }}
               >
                 <ArrowBackIosNew sx={{ fontSize: "15px" }} />
@@ -104,7 +94,7 @@ const ListingCard = ({
                 className="next-button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  goToNextSlide();
+                  goToNextSlide(e);
                 }}
               >
                 <ArrowForwardIos sx={{ fontSize: "15px" }} />

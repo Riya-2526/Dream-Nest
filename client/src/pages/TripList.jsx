@@ -1,24 +1,27 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import "../styles/List.scss";
 import Loader from "../components/Loader";
 import Navbar from "../components/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { setTripList } from "../redux/state";
 import ListingCard from "../components/ListingCard";
-import Footer from "../components/Footer";
+import Footer from "../components/Footer"
 
 const TripList = () => {
   const [loading, setLoading] = useState(true);
   const userId = useSelector((state) => state.user._id);
   const tripList = useSelector((state) => state.user.tripList);
+
   const dispatch = useDispatch();
 
-  // Memoize getTripList to prevent unnecessary re-creations on re-renders
-  const getTripList = useCallback(async () => {
+  const getTripList = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/users/${userId}/trips`, {
-        method: "GET",
-      });
+      const response = await fetch(
+        `http://localhost:3001/users/${userId}/trips`,
+        {
+          method: "GET",
+        }
+      );
 
       const data = await response.json();
       dispatch(setTripList(data));
@@ -26,11 +29,11 @@ const TripList = () => {
     } catch (err) {
       console.log("Fetch Trip List failed!", err.message);
     }
-  }, [dispatch, userId]); // Include dependencies here: dispatch and userId
+  };
 
   useEffect(() => {
-    getTripList(); // Run the getTripList function when the component mounts
-  }, [getTripList]); // Include getTripList in the dependency array
+    getTripList();
+  }, []);
 
   return loading ? (
     <Loader />
@@ -39,9 +42,8 @@ const TripList = () => {
       <Navbar />
       <h1 className="title-list">Your Trip List</h1>
       <div className="list">
-        {tripList?.map(({ listingId, hostId, startDate, endDate, totalPrice, booking = true }) => (
+        {tripList?.map(({ listingId, hostId, startDate, endDate, totalPrice, booking=true }) => (
           <ListingCard
-            key={listingId._id}
             listingId={listingId._id}
             creator={hostId._id}
             listingPhotoPaths={listingId.listingPhotoPaths}

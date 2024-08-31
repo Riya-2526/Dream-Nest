@@ -93,9 +93,7 @@ const CreateListing = () => {
     });
   };
 
-  
-  const creatorId = useSelector((state) =>{
-    return state.user._id});
+  const creatorId = useSelector((state) => state.user._id);
 
   const navigate = useNavigate();
 

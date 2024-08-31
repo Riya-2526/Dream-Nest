@@ -21,7 +21,7 @@ const Listings = () => {
           ? `http://localhost:3001/properties?category=${selectedCategory}`
           : "http://localhost:3001/properties",
         {
-          method: "GET", 
+          method: "GET",
         }
       );
 

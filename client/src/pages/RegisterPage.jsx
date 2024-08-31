@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
 import "../styles/Register.scss";
 
 const RegisterPage = () => {
@@ -12,50 +12,45 @@ const RegisterPage = () => {
     profileImage: null,
   });
 
-  const [passwordMatch, setPasswordMatch] = useState(true);
-
-  const navigate = useNavigate();
-
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    setFormData(prevData => ({
-      ...prevData,
+    setFormData({
+      ...formData,
+      [name]: value,
       [name]: name === "profileImage" ? files[0] : value,
-    }));
+    });
   };
 
-  // Validate password match
-  useEffect(() => {
-    setPasswordMatch(formData.password === formData.confirmPassword || formData.confirmPassword === "");
-  }, [formData.password, formData.confirmPassword]);
+  const [passwordMatch, setPasswordMatch] = useState(true)
 
-  // Handle form submission
+  useEffect(() => {
+    setPasswordMatch(formData.password === formData.confirmPassword || formData.confirmPassword === "")
+  })
+
+  const navigate = useNavigate()
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     try {
-      const registerForm = new FormData();
-      for (const key in formData) {
-        if (formData[key]) { // Only append if the value is not null/undefined
-          registerForm.append(key, formData[key]);
-        }
+      const register_form = new FormData()
+
+      for (var key in formData) {
+        register_form.append(key, formData[key])
       }
 
       const response = await fetch("http://localhost:3001/auth/register", {
         method: "POST",
-        body: registerForm,
-      });
+        body: register_form
+      })
 
       if (response.ok) {
-        navigate("/login");
-      } else {
-        console.log("Registration failed with status:", response.status);
+        navigate("/login")
       }
     } catch (err) {
-      console.log("Registration failed", err.message);
+      console.log("Registration failed", err.message)
     }
-  };
+  }
 
   return (
     <div className="register">
@@ -101,7 +96,7 @@ const RegisterPage = () => {
           />
 
           {!passwordMatch && (
-            <p style={{ color: "red" }}>Passwords do not match!</p>
+            <p style={{ color: "red" }}>Passwords are not matched!</p>
           )}
 
           <input
